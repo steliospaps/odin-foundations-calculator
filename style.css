@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.caclulator {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.calculator div {
+  display: flex;
+}
+
+.result{
+  font-size: larger;
+  height: 1em;
+  align-items: center;
+  justify-content: end;
+  border-style: solid;
+  padding: 5px;
+}
+
+button{
+  height: 3em;
+  aspect-ratio: 1;
+  margin: 2px;
+}
+
