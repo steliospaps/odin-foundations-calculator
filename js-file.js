@@ -3,10 +3,10 @@ function Calculator(result) {
   this.stack = 0;
   this.operation = null;
   this.scale = 0;
-  this.scaledValue=()=> this.scale?this.value / this.scale:this.value;
+  this.scaledValue = () => this.scale ? this.value / this.scale : this.value;
   this.display = () => {
-      result.textContent = this.scaledValue();
-    
+    result.textContent = this.scaledValue();
+
     console.log("state " + JSON.stringify(this));
   }
   this.onNumber = v => {
@@ -43,7 +43,7 @@ function Calculator(result) {
 
       }
       this.stack = null;
-      this.scale=0;
+      this.scale = 0;
     }
   }
   this.onCommand = c => {
@@ -84,6 +84,8 @@ function Calculator(result) {
             this.onNumber("0");
           }
           this.scale = 1;
+        } else if (this.scale === 1) {
+          this.scale = 0;
         }
       default:
         break;
