@@ -2,39 +2,48 @@ function Calculator(result) {
   this.value = 0;
   this.stack = 0;
   this.operation = null;
+  this.scale = 0;
+  this.scaledValue=()=> this.scale?this.value / this.scale:this.value;
+  this.display = () => {
+      result.textContent = this.scaledValue();
+    
+    console.log("state " + JSON.stringify(this));
+  }
   this.onNumber = v => {
     console.log("onNumber " + v + " " + JSON.stringify(this));
+
     if (this.stack != null) {
+      if (this.scale) {
+        this.scale *= 10;
+      }
       this.value = this.value * 10 + parseInt(v);
     } else {
-      this.stack = this.value;
+      this.stack = this.scaledValue();
       this.value = parseInt(v);
+      this.scale = 0;
     }
-    result.textContent = this.value;
-    console.log("state " + JSON.stringify(this));
+    this.display();
   };
   result.textContent = 0;
   this.performOperation = () => {
     if (this.operation && (this.stack != null)) {
       switch (this.operation) {
         case '+':
-          this.value = this.stack + this.value;
-          this.stack = null;
+          this.value = this.stack + this.scaledValue();
           break;
         case '-':
-          this.value = this.stack - this.value;
-          this.stack = null;
+          this.value = this.stack - this.scaledValue();
           break;
         case '*':
-          this.value = this.stack * this.value;
-          this.stack = null;
+          this.value = this.stack * this.scaledValue();
           break;
         case '/':
-          this.value = this.stack / this.value;
-          this.stack = null;
+          this.value = this.stack / this.scaledValue();
           break;
 
       }
+      this.stack = null;
+      this.scale=0;
     }
   }
   this.onCommand = c => {
@@ -44,6 +53,7 @@ function Calculator(result) {
         this.value = 0;
         this.operation = null;
         this.stack = null;
+        this.scale = 0;
         break;
       case '+':
       case '-':
@@ -61,11 +71,24 @@ function Calculator(result) {
       case 'sign':
         this.value *= -1;
         break;
+      case 'del':
+        this.value = (this.value - this.value % 10) / 10;
+        this.scale /= 10;
+        if (this.scale < 1) {
+          this.scale = 0;
+        }
+        break;
+      case '.':
+        if (this.scale === 0) {
+          if (this.stack == null) {
+            this.onNumber("0");
+          }
+          this.scale = 1;
+        }
       default:
         break;
     }
-    result.textContent = this.value;
-    console.log("state " + JSON.stringify(this));
+    this.display();
   }
 }
 
