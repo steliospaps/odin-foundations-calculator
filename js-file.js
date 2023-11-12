@@ -4,7 +4,7 @@ function Calculator(result) {
   this.operation = null;
   this.onNumber = v => {
     console.log("onNumber " + v + " " + JSON.stringify(this));
-    if (this.stack !=null) {
+    if (this.stack != null) {
       this.value = this.value * 10 + parseInt(v);
     } else {
       this.stack = this.value;
@@ -15,7 +15,7 @@ function Calculator(result) {
   };
   result.textContent = 0;
   this.performOperation = () => {
-    if (this.operation && (this.stack !=null)) {
+    if (this.operation && (this.stack != null)) {
       switch (this.operation) {
         case '+':
           this.value = this.stack + this.value;
@@ -57,6 +57,9 @@ function Calculator(result) {
         this.performOperation()
         this.operation = null;
         this.stack = null;
+        break;
+      case 'sign':
+        this.value *= -1;
         break;
       default:
         break;
