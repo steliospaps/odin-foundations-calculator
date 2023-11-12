@@ -1,16 +1,17 @@
 function Calculator(result) {
   this.value = 0;
-  this.stack = 0;
+  this.stack = null;
   this.operation = null;
   this.onNumber = v => {
-    console.log("this " + JSON.stringify(this));
-    if(this.stack || this.stack === 0){
+    console.log("onNumber " + v + " " + JSON.stringify(this));
+    if (this.stack || this.stack === 0) {
       this.value = this.value * 10 + parseInt(v);
-    }else{
-      this.stack=this.value;
-      this.value=parseInt(v);
+    } else {
+      this.stack = this.value;
+      this.value = parseInt(v);
     }
     result.textContent = this.value;
+    console.log("state " + JSON.stringify(this));
   };
   result.textContent = 0;
   this.performOperation = () => {
@@ -37,12 +38,12 @@ function Calculator(result) {
     }
   }
   this.onCommand = c => {
-    console.log("onCommand " + c)
+    console.log("onCommand " + c + " " + JSON.stringify(this));
     switch (c) {
       case 'ac':
         this.value = 0;
         this.operation = null;
-        this.stack=null;
+        this.stack = null;
         break;
       case '+':
       case '-':
@@ -50,11 +51,18 @@ function Calculator(result) {
       case '*':
         this.performOperation()
         this.operation = c;
+        this.stack = null;
+        break;
+      case '=':
+        this.performOperation()
+        this.operation = null;
+        this.stack = null;
         break;
       default:
         break;
     }
     result.textContent = this.value;
+    console.log("state " + JSON.stringify(this));
   }
 }
 
