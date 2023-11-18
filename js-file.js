@@ -13,7 +13,9 @@ function Calculator(result) {
       result.textContent = "E";
       this.value = NaN;
     } else {
-      result.textContent = val;
+      const str = val.toString();
+      result.textContent = str.length > this.size ? str.substring(0, this.size) : str;
+
     }
 
     console.log("state " + JSON.stringify(this));
@@ -23,19 +25,22 @@ function Calculator(result) {
     if (isNaN(this.value)) {
       return;
     }
-    if (this.scaledValue().toString().length < this.size) {
-      if (this.stack != null) {
-        if (this.scale) {
-          this.scale *= 10;
-        }
-        this.value = this.value * 10 + parseInt(v);
-      } else {
-        this.stack = this.scaledValue();
-        this.value = parseInt(v);
-        this.scale = 0;
+
+    if (this.stack != null) {
+      if (this.scaledValue().toString().length >= this.size) {
+        return;
       }
-      this.display();
+      if (this.scale) {
+        this.scale *= 10;
+      }
+      this.value = this.value * 10 + parseInt(v);
+    } else {
+      this.stack = this.scaledValue();
+      this.value = parseInt(v);
+      this.scale = 0;
     }
+    this.display();
+
   };
   result.textContent = 0;
   this.performOperation = () => {
@@ -130,7 +135,7 @@ const calc = new Calculator(document.querySelector(".result"));
 document.querySelectorAll(".operand").forEach(i => i.onclick = () => calc.onNumber(i.getAttribute("value")));
 document.querySelectorAll(".operation").forEach(i => i.onclick = () => calc.onCommand(i.getAttribute("value")));
 document.addEventListener('keypress', (event => {
-  
+
   switch (event.key) {
     case '0':
     case '1':
@@ -155,11 +160,11 @@ document.addEventListener('keypress', (event => {
     case '%':
       calc.onCommand("pc");
       break;
-      case 'c':
-        case 'C':
-        calc.onCommand("ac");
-        break;
-      default:
+    case 'c':
+    case 'C':
+      calc.onCommand("ac");
+      break;
+    default:
       return;
   }
   event.preventDefault();
