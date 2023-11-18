@@ -1,28 +1,41 @@
 function Calculator(result) {
+  this.size = 16;
+  this.maxVal=Math.pow(10,this.size);
   this.value = 0;
   this.stack = 0;
   this.operation = null;
   this.scale = 0;
   this.scaledValue = () => this.scale ? this.value / this.scale : this.value;
   this.display = () => {
-    result.textContent = this.scaledValue();
+    const val = this.scaledValue();
+    //console.log(`display ${val} isNaN(val)=${isNaN(val)} Math.abs(val)=${Math.abs(val)} (10 ^ this.size)=${this.maxVal}`)
+    if (isNaN(val) || (Math.abs(val) >this.maxVal)) {
+      result.textContent = "E";
+      this.value = NaN;
+    } else {
+      result.textContent = val;
+    }
 
     console.log("state " + JSON.stringify(this));
   }
   this.onNumber = v => {
     console.log("onNumber " + v + " " + JSON.stringify(this));
-
-    if (this.stack != null) {
-      if (this.scale) {
-        this.scale *= 10;
-      }
-      this.value = this.value * 10 + parseInt(v);
-    } else {
-      this.stack = this.scaledValue();
-      this.value = parseInt(v);
-      this.scale = 0;
+    if(isNaN(this.value)){
+      return;
     }
-    this.display();
+    if (this.scaledValue().toString().length < this.size) {
+      if (this.stack != null) {
+        if (this.scale) {
+          this.scale *= 10;
+        }
+        this.value = this.value * 10 + parseInt(v);
+      } else {
+        this.stack = this.scaledValue();
+        this.value = parseInt(v);
+        this.scale = 0;
+      }
+      this.display();
+    }
   };
   result.textContent = 0;
   this.performOperation = () => {
@@ -48,6 +61,9 @@ function Calculator(result) {
   }
   this.onCommand = c => {
     console.log("onCommand " + c + " " + JSON.stringify(this));
+    if(isNaN(this.value) && c!='ac'){
+      return;
+    }
     switch (c) {
       case 'ac':
         this.value = 0;
@@ -64,15 +80,15 @@ function Calculator(result) {
         this.stack = null;
         break;
       case 'pc':
-        if(this.operation && this.operation!='/'){
-          if(this.operation!='*'){
-            this.value*=this.stack;
+        if (this.operation && this.operation != '/') {
+          if (this.operation != '*') {
+            this.value *= this.stack;
           }
-          this.value/=100;
+          this.value /= 100;
           this.performOperation();
           this.operation = null;
           this.stack = null;
-          }
+        }
         break;
       case '=':
         this.performOperation()
