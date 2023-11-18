@@ -1,6 +1,6 @@
 function Calculator(result) {
-  this.size = 16;
-  this.maxVal=Math.pow(10,this.size);
+  this.size = 12;
+  this.maxVal = Math.pow(10, this.size);
   this.value = 0;
   this.stack = 0;
   this.operation = null;
@@ -9,7 +9,7 @@ function Calculator(result) {
   this.display = () => {
     const val = this.scaledValue();
     //console.log(`display ${val} isNaN(val)=${isNaN(val)} Math.abs(val)=${Math.abs(val)} (10 ^ this.size)=${this.maxVal}`)
-    if (isNaN(val) || (Math.abs(val) >this.maxVal)) {
+    if (isNaN(val) || (Math.abs(val) > this.maxVal)) {
       result.textContent = "E";
       this.value = NaN;
     } else {
@@ -20,7 +20,7 @@ function Calculator(result) {
   }
   this.onNumber = v => {
     console.log("onNumber " + v + " " + JSON.stringify(this));
-    if(isNaN(this.value)){
+    if (isNaN(this.value)) {
       return;
     }
     if (this.scaledValue().toString().length < this.size) {
@@ -61,7 +61,7 @@ function Calculator(result) {
   }
   this.onCommand = c => {
     console.log("onCommand " + c + " " + JSON.stringify(this));
-    if(isNaN(this.value) && c!='ac'){
+    if (isNaN(this.value) && c != 'ac') {
       return;
     }
     switch (c) {
@@ -129,3 +129,38 @@ const calc = new Calculator(document.querySelector(".result"));
 
 document.querySelectorAll(".operand").forEach(i => i.onclick = () => calc.onNumber(i.getAttribute("value")));
 document.querySelectorAll(".operation").forEach(i => i.onclick = () => calc.onCommand(i.getAttribute("value")));
+document.addEventListener('keypress', (event => {
+  
+  switch (event.key) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      calc.onNumber(event.key);
+      break;
+    case '+':
+    case '-':
+    case '*':
+    case '/':
+    case '=':
+    case '.':
+      calc.onCommand(event.key);
+      break;
+    case '%':
+      calc.onCommand("pc");
+      break;
+      case 'c':
+        case 'C':
+        calc.onCommand("ac");
+        break;
+      default:
+      return;
+  }
+  event.preventDefault();
+}))
