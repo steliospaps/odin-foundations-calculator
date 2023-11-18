@@ -63,6 +63,17 @@ function Calculator(result) {
         this.operation = c;
         this.stack = null;
         break;
+      case 'pc':
+        if(this.operation && this.operation!='/'){
+          if(this.operation!='*'){
+            this.value*=this.stack;
+          }
+          this.value/=100;
+          this.performOperation();
+          this.operation = null;
+          this.stack = null;
+          }
+        break;
       case '=':
         this.performOperation()
         this.operation = null;
@@ -72,10 +83,14 @@ function Calculator(result) {
         this.value *= -1;
         break;
       case 'del':
-        this.value = (this.value - this.value % 10) / 10;
-        this.scale /= 10;
-        if (this.scale < 1) {
-          this.scale = 0;
+        if (this.stack != null) {
+          this.value = (this.value - this.value % 10) / 10;
+          this.scale /= 10;
+          if (this.scale < 1) {
+            this.scale = 0;
+          }
+        } else {
+          this.value = 0;
         }
         break;
       case '.':
