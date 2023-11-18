@@ -8,25 +8,39 @@
 .caclulator {
   display: flex;
   flex-direction: column;
-  
+
 }
 
 .calculator div {
   display: flex;
 }
 
-.result{
+.result {
   font-size: larger;
   height: 1em;
   align-items: center;
   justify-content: end;
   border-style: solid;
   padding: 5px;
+  background-color: black;
+  color: lightgreen;
+  border-color: gray;
+  font-family: 'Courier New', Courier, monospace;
 }
 
-button{
+button {
   height: 3em;
   aspect-ratio: 1;
   margin: 2px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+
 }
 
+.operand {
+  background-color: yellowgreen;
+}
+
+.operation {
+  background-color: lightblue;
+}
